@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:household/Constant.dart';
-import 'package:household/Model/product.dart';
 import 'package:household/Model/productModel.dart';
-import 'package:household/views/CartCounter.dart';
+import 'package:household/Screens/CartCounter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,7 +63,8 @@ class _CounterWithFavBtnState extends State<CounterWithFavBtn> {
                     behavior: SnackBarBehavior.floating,
                     margin: EdgeInsets.only(bottom: 315,left: 20,right: 20) ,
                     content: Text("Item added To Wishlist",style: TextStyle(color: Colors.greenAccent),)));
-              }}
+              }
+              }
               else{
                 var data = await http.post(Uri.parse('${BASE_URL}remove_from_fav.php'),
                 body: {

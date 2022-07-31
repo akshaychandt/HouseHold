@@ -1,18 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:household/Constant.dart';
 import 'package:household/Loader/ColorLoader.dart';
 import 'package:household/Model/countModel.dart';
 import 'package:household/Model/counter_component.dart';
-import 'package:household/Model/product.dart';
 import 'package:household/Model/productModel.dart';
-import 'package:household/views/Body.dart';
-import 'package:household/views/CartCounter.dart';
+import 'package:household/Screens/DetailsScreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:household/views/DetailsScreen.dart';
-import 'package:household/views/cartitemcard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:provider/provider.dart';
 
@@ -31,22 +26,14 @@ class _CartState extends State<Cart> {
       "id": _id,
     });
     List jsonData = jsonDecode(data.body);
-    List<Color> colors = [
-      Color(0xFF3D82AE),
-      Color(0xFFD3A984),
-      Color(0xFF989493)
-    ];
-    int item = 0;
-    List<ProductModel> products = jsonData
-        .map<ProductModel>(
-            (json) => ProductModel.fromJson(json, colors.elementAt(item++)))
-        .toList();
+    List<ProductModel> products = jsonData.map<ProductModel>((json) => ProductModel.fromJson(json)).toList();
     return products;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: buildAppBar(context),
       body: buildBody(context),
     );
@@ -60,7 +47,6 @@ class _CartState extends State<Cart> {
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back,
-          color: kTextLightColor,
         ),
         onPressed: () => Navigator.pop(context),
       ),
@@ -68,12 +54,10 @@ class _CartState extends State<Cart> {
   }
 
   SafeArea buildBody(BuildContext context) {
-    int count = 1;
     return SafeArea(
       child: FutureBuilder(
         future: _getProduct(),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
           if (!snapshot.hasData) {
             return Center(child: ColorLoader());
           } else {
@@ -86,6 +70,7 @@ class _CartState extends State<Cart> {
                           1), // SliverGridDelegateWithFixedCrossAxisCount
                   itemBuilder: (BuildContext context, int index) {
                     // Product product = products[index];
+                    var countValue = 1;
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -113,7 +98,7 @@ class _CartState extends State<Cart> {
                                     // For  demo we use fixed height  and width
                                     // Now we dont need them
                                     height: 180,
-                                    width: 400,
+                                    width: 350,
                                     decoration: BoxDecoration(
                                       color: Color(0xFF3D82AE),
                                       borderRadius: BorderRadius.circular(8),
@@ -129,62 +114,13 @@ class _CartState extends State<Cart> {
                               SizedBox(
                                 height: 20,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  // Row(
-                                  //   children: [
-                                  //     buildOutlineButton(
-                                  //       icon: Icons.remove,
-                                  //       press: () {
-                                  //         setState(() {
-                                  //           if (count > 1) {
-                                  //             count--;
-                                  //           }
-                                  //         });
-                                  //       },
-                                  //     ),
-                                  //     Padding(
-                                  //       padding: const EdgeInsets.symmetric(
-                                  //           horizontal: kDefaultPaddin / 2),
-                                  //       child: Text(
-                                  //         count.toString(),
-                                  //         style: Theme.of(context)
-                                  //             .textTheme
-                                  //             .headline6,
-                                  //       ),
-                                  //     ),
-                                  //     buildOutlineButton(
-                                  //         icon: Icons.add,
-                                  //         press: () {
-                                  //           setState(() {
-                                  //             if (count < 10) {
-                                  //               count++;
-                                  //             }
-                                  //           });
-                                  //         }),
-                                  //   ],
-                                  // ),
-
-
-                                  // Text(
-                                  //   // products is out demo list
-                                  //   snapshot.data![index].productName
-                                  //       .toString(),
-                                  //   style: TextStyle(color: kTextLightColor),
-                                  // ),
-                                  // SizedBox(
-                                  //   width: 5,
-                                  // ),
-                                  // Text(
-                                  //   "\₹${int.parse(snapshot.data![index].price!) * value.count}",
-                                  //   style:
-                                  //       TextStyle(fontWeight: FontWeight.bold),
-                                  // ),
-                                ],
-                              ),
-                              CounterComponent(product:snapshot.data!.elementAt(index)),
+                              CounterComponent(
+                                  product: snapshot.data!.elementAt(index),
+                                  onCount: (int count) {
+                                    setState(() {
+                                      countValue = count;
+                                    });
+                                  }),
                               Container(
                                 color: Colors.black12,
                                 child: Row(
@@ -194,46 +130,70 @@ class _CartState extends State<Cart> {
                                     TextButton.icon(
                                       icon: Icon(Icons.delete_forever),
                                       onPressed: () async {
-                                        final _product_id =
-                                            snapshot.data![index].productId;
-                                        var data = await http.post(
-                                            Uri.parse(
-                                                "${BASE_URL}remove_cart.php"),
+                                        final _product_id = snapshot.data![index].productId;
+                                        var data = await http.post(Uri.parse("${BASE_URL}remove_cart.php"),
                                             body: {
-                                              "id": _product_id,
+                                              "product_id": _product_id,
                                             });
-                                        setState(() {
-                                          _getProduct();
-                                        });
+                                        var jsonData = jsonDecode(data.body);
+                                          setState(() {
+                                            _getProduct();
+                                          });
+
                                       },
                                       label: Text('Remove'),
                                     ),
-                                    Consumer<CountModel>(
-                                      builder: (context, value, child) =>
-                                      TextButton.icon(
-                                        icon: Icon(Icons.shopping_bag),
-                                        onPressed: () async {
-                                          final sharedprfs =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          final _user_id =
-                                              sharedprfs.getString('id');
-                                          final _product_id =
-                                              snapshot.data![index].productId;
-                                          final _count = value.count;
-                                          var data = await http.post(
-                                              Uri.parse("${BASE_URL}buy_now.php"),
+                                    TextButton.icon(
+                                      icon: Icon(Icons.shopping_bag),
+                                      onPressed: () async {
+                                        final sharedprfs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        final _user_id =
+                                            sharedprfs.getString('id');
+                                        final _product_id =
+                                            snapshot.data![index].productId;
+                                        final _count = countValue.toString();
+                                        var data = await http.post(
+                                            Uri.parse(
+                                                "${BASE_URL}buy_product.php"),
+                                            body: {
+                                              "user_id": _user_id,
+                                              "product_id": _product_id,
+                                              "count": _count
+                                            });
+                                        // print(data.body);
+                                        // print(data.statusCode);
+                                        var jsonData = jsonDecode(data.body);
+                                        if (jsonData['message'] == 'true') {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  margin: EdgeInsets.only(
+                                                      bottom: 315,
+                                                      left: 20,
+                                                      right: 20),
+                                                  content: Text(
+                                                    "Your request was send",
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.greenAccent),
+                                                  )));
+                                          var removedata = await http.post(
+                                              Uri.parse(
+                                                  "${BASE_URL}remove_cart.php"),
                                               body: {
-                                                "user_id": _user_id,
                                                 "product_id": _product_id,
-                                                "count": _count
                                               });
-                                          value.cartItemCountDecrement();
-                                        },
-                                        label: Text('Buy This Now',
-                                            style: TextStyle(
-                                                color: Colors.redAccent)),
-                                      ),
+                                            setState(() {
+                                              _getProduct();
+                                            });
+                                        }
+                                      },
+                                      label: Text('Buy This Now',
+                                          style: TextStyle(
+                                              color: Colors.redAccent)),
                                     ),
                                   ],
                                 ),

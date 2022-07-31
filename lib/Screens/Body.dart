@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:household/Model/product.dart';
 import 'package:household/Constant.dart';
 import 'package:household/Model/productModel.dart';
-import 'package:household/views/CounterWithFavBtn.dart';
-import 'package:household/views/addtocart.dart';
-import 'package:household/views/color_and_size.dart';
-import 'package:household/views/description.dart';
-import 'package:household/views/producttitlewithimage.dart';
+import 'package:household/Screens/CounterWithFavBtn.dart';
+import 'package:household/Screens/description.dart';
+import 'package:household/Screens/producttitlewithimage.dart';
+import 'addtocart.dart';
 
 
 class Body extends StatelessWidget {

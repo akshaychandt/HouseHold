@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:household/Model/countModel.dart';
 import 'package:household/Model/product.dart';
 import 'package:household/Model/productModel.dart';
-import 'package:household/views/Body.dart';
+import 'package:household/Screens/Body.dart';
 import 'package:provider/provider.dart';
 
 import 'cart.dart';
@@ -30,20 +30,20 @@ class DetailsScreen extends StatelessWidget {
         onPressed: () => Navigator.pop(context),
       ),
       actions: <Widget>[
-        // IconButton(
-        //   icon: Icon(Icons.search,color: kTextLightColor,),
-        //   onPressed: () {},
+        // GestureDetector(
+        //   onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Cart())),
+        //   child: Badge(
+        //     badgeContent : Consumer<CountModel>(
+        //         builder: (context, value, child) =>
+        //         Text ( '${value.itemCount}' ,style : TextStyle ( color : Colors.white ))) ,
+        //     animationDuration : Duration ( milliseconds : 300 ) ,
+        //     child : Icon(Icons.shopping_cart) ,
+        //   ),
         // ),
-        GestureDetector(
-          onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Cart())),
-          child: Badge(
-            badgeContent : Consumer<CountModel>(
-                builder: (context, value, child) =>
-                Text ( '${value.itemCount}' ,style : TextStyle ( color : Colors.white ))) ,
-            animationDuration : Duration ( milliseconds : 300 ) ,
-            child : Icon(Icons.shopping_cart) ,
-          ),
-        ),
+        IconButton(
+            onPressed: () => Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => Cart())),
+            icon: Icon(Icons.shopping_cart)),
         SizedBox(width: 20)
       ],
     );

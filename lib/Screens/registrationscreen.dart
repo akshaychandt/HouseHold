@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:household/views/loginscreen.dart';
+import 'package:household/Screens/loginscreen.dart';
 import 'package:http/http.dart' as http;
 
 import '../Constant.dart';
@@ -45,7 +45,7 @@ class _registrationscreenState extends State<registrationscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white10
+      backgroundColor: Colors.black
       ,
       body: SingleChildScrollView(
         child: Form(

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:household/Constant.dart';
 import 'package:household/Loader/ColorLoader.dart';
 import 'package:household/Model/productModel.dart';
-import 'package:household/views/Body.dart';
-import 'package:household/views/DetailsScreen.dart';
-import 'package:household/views/ItemCard.dart';
+import 'package:household/Screens/DetailsScreen.dart';
+import 'package:household/Screens/ItemCard.dart';
+import 'package:household/Screens/cart.dart';
+import 'package:household/Screens/favitemcard.dart';
 import 'package:http/http.dart' as http;
-import 'package:household/views/cart.dart';
 
 class Favourites extends StatefulWidget {
   const Favourites({Key? key}) : super(key: key);
@@ -22,16 +22,15 @@ class _FavouritesState extends State<Favourites> {
     var data = await http
         .get(Uri.parse("${BASE_URL}view_favourite.php"));
     List jsonData = jsonDecode(data.body);
-    List<Color> colors = [Color(0xFF3D82AE),Color(0xFFD3A984),Color(0xFF989493)];
-    int item = 0;
     List<ProductModel> products =
-    jsonData.map<ProductModel>((json) => ProductModel.fromJson(json,item!=colors.last?colors[item++]: colors[item=0])).toList();
+    jsonData.map<ProductModel>((json) => ProductModel.fromJson(json)).toList();
     print(jsonData.first['product_name']);
     return products;
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: buildAppBar(context),
       body: buildBody(context),
     );
@@ -41,16 +40,14 @@ class _FavouritesState extends State<Favourites> {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
-      title: Text('House Hold'),
-      centerTitle: true,
+      title: Text('Favourites'),
       actions: [
         IconButton(
-          icon: Icon(Icons.search,color: kTextLightColor,),
+          icon: Icon(Icons.search),
           onPressed: () {},
         ),
         IconButton(
-            icon: Icon(Icons.shopping_cart,
-              color: kTextLightColor,),
+            icon: Icon(Icons.shopping_cart),
             onPressed: () =>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Cart()))
         ),
 
@@ -73,7 +70,7 @@ class _FavouritesState extends State<Favourites> {
                     crossAxisCount: 2), // SliverGridDelegateWithFixedCrossAxisCount
                 itemBuilder: (BuildContext context, int index){
                   // Product product = products[index];
-                  return ItemCard(
+                  return FavItemCard(
                     product:snapshot.data!.elementAt(index),
                     press: () =>Navigator.push(
                       context,

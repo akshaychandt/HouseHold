@@ -71,18 +71,57 @@ class AddToCart  extends StatelessWidget {
           Expanded(
             child: SizedBox(
               height: 50,
-              child: ElevatedButton(style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18)),
-                backgroundColor: Color(0xFF3D82AE),
-              ),
-                onPressed: () {},
-                child: Text(
-                  "Buy  Now".toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+              child: Consumer<CountModel>(
+              builder: (context, value, child) =>
+                ElevatedButton(style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18)),
+                  backgroundColor: Color(0xFF3D82AE),
+                ),
+                  onPressed: () async {
+                    final sharedprfs =
+                    await SharedPreferences
+                        .getInstance();
+                    final _user_id =
+                    sharedprfs.getString('id');
+                    final _product_id =
+                        product.productId;
+                    final _count = value.count.toString();
+                    var data = await http.post(
+                        Uri.parse(
+                            "${BASE_URL}buy_product.php"),
+                        body: {
+                          "user_id": _user_id,
+                          "product_id": _product_id,
+                          "count": _count
+                        });
+                    print(data.body);
+                    print(data.statusCode);
+                    var jsonData = jsonDecode(data.body);
+                    if (jsonData['message'] == 'true') {
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(
+                          behavior:
+                          SnackBarBehavior.floating,
+                          margin: EdgeInsets.only(
+                              bottom: 315,
+                              left: 20,
+                              right: 20),
+                          content: Text(
+                            "Your request was send",
+                            style: TextStyle(
+                                color:
+                                Colors.greenAccent),
+                          )));
+                    }
+                  },
+                  child: Text(
+                    "Buy  Now".toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),

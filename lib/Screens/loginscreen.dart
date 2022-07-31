@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:household/Constant.dart';
-import 'package:household/views/lineManHomeScreen.dart';
-import 'package:household/views/userHomeScreen.dart';
-import 'package:household/views/registrationscreen.dart';
+import 'package:household/Screens/registrationscreen.dart';
+import 'package:household/Screens/userHomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import 'LineManScreen/lineManHomeScreen.dart';
 
 class loginscreen extends StatefulWidget {
   const loginscreen({Key? key}) : super(key: key);
@@ -50,7 +51,7 @@ class _loginscreenState extends State<loginscreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white10
+      backgroundColor: Colors.black
       ,
       body: SingleChildScrollView(
         child: Column(

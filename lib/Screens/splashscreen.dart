@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:household/views/lineManHomeScreen.dart';
-import 'package:household/views/userHomeScreen.dart';
-import 'package:household/views/loginscreen.dart';
+import 'package:household/Screens/LineManScreen/lineManHomeScreen.dart';
+import 'package:household/Screens/loginscreen.dart';
+import 'package:household/Screens/userHomeScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class splashscreen extends StatefulWidget {
@@ -41,7 +41,7 @@ class _splashscreenState extends State<splashscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.network('https://storage.googleapis.com/kodehero/blog/2018/09/880b715d-flutter-logo-1024x313.png',
+        child: Image.asset('assets/images/products/logo.png',
           height: 150,
           width: 150,),
       ),
