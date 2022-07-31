@@ -1,7 +1,10 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:household/Model/countModel.dart';
 import 'package:household/Model/product.dart';
 import 'package:household/Model/productModel.dart';
 import 'package:household/views/Body.dart';
+import 'package:provider/provider.dart';
 
 import 'cart.dart';
 
@@ -27,16 +30,21 @@ class DetailsScreen extends StatelessWidget {
         onPressed: () => Navigator.pop(context),
       ),
       actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search,color: kTextLightColor,),
-          onPressed: () {},
+        // IconButton(
+        //   icon: Icon(Icons.search,color: kTextLightColor,),
+        //   onPressed: () {},
+        // ),
+        GestureDetector(
+          onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Cart())),
+          child: Badge(
+            badgeContent : Consumer<CountModel>(
+                builder: (context, value, child) =>
+                Text ( '${value.itemCount}' ,style : TextStyle ( color : Colors.white ))) ,
+            animationDuration : Duration ( milliseconds : 300 ) ,
+            child : Icon(Icons.shopping_cart) ,
+          ),
         ),
-        IconButton(
-          icon: Icon(Icons.shopping_cart,
-          color: kTextLightColor,),
-          onPressed: () =>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Cart()))
-        ),
-        SizedBox(width: kDefaultPaddin / 2)
+        SizedBox(width: 20)
       ],
     );
   }
